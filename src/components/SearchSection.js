@@ -58,6 +58,57 @@
 
 
 // src/components/SearchSection.jsx
+// import React, { useState } from "react";
+// import {
+//   Box,
+//   Autocomplete,
+//   TextField,
+//   Typography,
+//   Paper,
+//   Button,
+// } from "@mui/material";
+
+
+// const SearchSection = ({ onSearchSubmit,data }) => {
+//   const [selectedOption, setSelectedOption] = useState(null);
+
+//   return (
+//     <Paper elevation={2} sx={{ p: 2, mb: 3 }}>
+//       <Typography variant="h6" gutterBottom>
+//         Search Term
+//       </Typography>
+//       <Box sx={{ display: "flex", gap: 2 }}>
+//         <Autocomplete
+//           options={data}
+//           getOptionLabel={(option) =>
+//             `${option}`
+//           }
+//           value={selectedOption}
+//           onChange={(_, newValue) => setSelectedOption(newValue)}
+//           renderInput={(params) => (
+//             <TextField
+//               {...params}
+//               label="Search trait..."
+//               variant="outlined"
+//               fullWidth
+//             />
+//           )}
+//           sx={{ flexGrow: 1 }}
+//         />
+//         <Button
+//           variant="contained"
+//           onClick={() => onSearchSubmit(selectedOption)}
+//           disabled={!selectedOption}
+//         >
+//           Search
+//         </Button>
+//       </Box>
+//     </Paper>
+//   );
+// };
+
+// export default SearchSection;
+
 import React, { useState } from "react";
 import {
   Box,
@@ -68,26 +119,32 @@ import {
   Button,
 } from "@mui/material";
 
-// Dummy options, you should load this from your actual trait data
-const searchOptions = [
-  {
-    id: "101",
-    label: "受力性状 (Stress trait)",
-    english: "受力性状 (Stress trait)",
-    code: "TR101",
-    path: ["100", "101"],
-  },
-  {
-    id: "102",
-    label: "Flood Resistance",
-    english: "Flood Tolerance",
-    code: "TR102",
-    path: ["100", "102"],
-  },
-];
-
-const SearchSection = ({ onSearchSubmit }) => {
+const SearchSection = ({ onSearchSubmit, data }) => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  
+  // Extract all possible searchable terms from the data
+  const extractSearchTerms = (nodes) => {
+    let terms = [];
+    nodes.forEach(node => {
+      terms.push({ label: node.ename, value: node.id });
+      if (node.children) {
+        terms = terms.concat(extractSearchTerms(node.children));
+      }
+    });
+    return terms;
+  };
+
+  const searchOptions = data //? extractSearchTerms(data) : [];
+
+  const handleSubmit = () => {
+    // Use either the selected option label or the raw input value
+    console.log("Searching for:", inputValue);
+    const searchTerm = inputValue //selectedOption?.label || inputValue;
+    if (searchTerm) {
+      onSearchSubmit(searchTerm);
+    }
+  };
 
   return (
     <Paper elevation={2} sx={{ p: 2, mb: 3 }}>
@@ -96,26 +153,28 @@ const SearchSection = ({ onSearchSubmit }) => {
       </Typography>
       <Box sx={{ display: "flex", gap: 2 }}>
         <Autocomplete
+          freeSolo
           options={searchOptions}
-          getOptionLabel={(option) =>
-            `${option.english}`
-          }
+          getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
           value={selectedOption}
           onChange={(_, newValue) => setSelectedOption(newValue)}
+          inputValue={inputValue}
+          onInputChange={(_, newInputValue) => setInputValue(newInputValue)}
           renderInput={(params) => (
             <TextField
               {...params}
               label="Search trait..."
               variant="outlined"
               fullWidth
+              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
             />
           )}
           sx={{ flexGrow: 1 }}
         />
         <Button
           variant="contained"
-          onClick={() => onSearchSubmit(selectedOption)}
-          disabled={!selectedOption}
+          onClick={handleSubmit}
+          disabled={!selectedOption && !inputValue}
         >
           Search
         </Button>

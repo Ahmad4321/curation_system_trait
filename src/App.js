@@ -80,6 +80,7 @@ import TraitHierarchy from "./components/TraitHierarchy";
 import ActionPanel from "./components/ActionPanel";
 import EvidenceAccordion from "./components/EvidenceAccordion";
 import sampleData from "./assets/DataJson.json";
+import searchdata from "./assets/OutputSearch.json";
 
 const convertDataIdsToStrings = (nodes) => {
   return nodes.map((node) => ({
@@ -134,7 +135,8 @@ const App = () => {
         </Box>
         <Divider textAlign="center"></Divider>
 
-        <SearchSection onSearchSubmit={setSearchResult} />
+        <SearchSection onSearchSubmit={setSearchResult} data={searchdata} />
+
 
         <Grid container spacing={3} sx={{ mt: 2 }} className="grid-container">
           <Grid item size={6} sx={{ height: 500, overflowY: "auto" }}>
@@ -147,7 +149,7 @@ const App = () => {
           </Grid>
           <Grid item size={6}>
             <Paper elevation={2} sx={{ p: 2, height: "100%" }}>
-              <ActionPanel />
+              <ActionPanel data={searchdata}/>
               <Divider textAlign="center">****</Divider>
               <EvidenceAccordion />
             </Paper>

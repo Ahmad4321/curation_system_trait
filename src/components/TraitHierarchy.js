@@ -1,4 +1,6 @@
 // src/components/TraitHierarchy.jsx
+// 
+
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -13,15 +15,16 @@ import {
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
-const TraitItem = ({ node, level = 0, searchPath = [], isMatched = false }) => {
+const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "" }) => {
   const [open, setOpen] = useState(false);
   const hasChildren = node.children && node.children.length > 0;
+  const isMatched = searchTerm && node.ename.toLowerCase().includes(searchTerm.toLowerCase());
 
   useEffect(() => {
-    if (searchPath.includes(node.id)) {
+    if (searchPath.includes(node.id) || isMatched) {
       setOpen(true);
     }
-  }, [searchPath, node.id]);
+  }, [searchPath, node.id, isMatched]);
 
   return (
     <>
@@ -30,12 +33,13 @@ const TraitItem = ({ node, level = 0, searchPath = [], isMatched = false }) => {
         sx={{
           pl: level * 4,
           backgroundColor: isMatched ? "rgba(25, 118, 210, 0.08)" : "inherit",
+          cursor: hasChildren ? "pointer" : "default",
         }}
       >
         <ListItemText
           primary={
             <>
-              {node.name}
+              {node.ename}
               {isMatched && (
                 <Chip
                   label="Matched"
@@ -58,7 +62,7 @@ const TraitItem = ({ node, level = 0, searchPath = [], isMatched = false }) => {
                 node={child}
                 level={level + 1}
                 searchPath={searchPath}
-                isMatched={searchPath.includes(child.id)}
+                searchTerm={searchTerm}
               />
             ))}
           </List>
@@ -69,9 +73,33 @@ const TraitItem = ({ node, level = 0, searchPath = [], isMatched = false }) => {
   );
 };
 
-const TraitHierarchy = ({ searchResult, data }) => {
+const TraitHierarchy = ({ searchTerm, data }) => {
   const [expandedPaths, setExpandedPaths] = useState([]);
   const [traitHierarchy, setTraitHierarchy] = useState([]);
+
+  const findMatchingPaths = (nodes, term, currentPath = []) => {
+    let paths = [];
+    nodes.forEach(node => {
+      const newPath = [...currentPath, node.id];
+      if (term && node.ename.toLowerCase().includes(term.toLowerCase())) {
+        paths.push(newPath);
+      }
+      if (node.children) {
+        paths = paths.concat(findMatchingPaths(node.children, term, newPath));
+      }
+    });
+    return paths;
+  };
+
+  const getAllParentPaths = (paths) => {
+    const allPaths = new Set();
+    paths.forEach(path => {
+      for (let i = 1; i < path.length; i++) {
+        allPaths.add(path.slice(0, i).join('-'));
+      }
+    });
+    return Array.from(allPaths);
+  };
 
   useEffect(() => {
     if (data) {
@@ -80,10 +108,14 @@ const TraitHierarchy = ({ searchResult, data }) => {
   }, [data]);
 
   useEffect(() => {
-    if (searchResult) {
-      setExpandedPaths(searchResult.path);
+    if (searchTerm) {
+      const matchingPaths = findMatchingPaths(data, searchTerm);
+      const pathsToExpand = getAllParentPaths(matchingPaths);
+      setExpandedPaths(pathsToExpand);
+    } else {
+      setExpandedPaths([]);
     }
-  }, [searchResult]);
+  }, [searchTerm, data]);
 
   return (
     <Box>
@@ -96,7 +128,7 @@ const TraitHierarchy = ({ searchResult, data }) => {
             key={trait.id}
             node={trait}
             searchPath={expandedPaths}
-            isMatched={searchResult?.id === trait.id}
+            searchTerm={searchTerm}
           />
         ))}
       </List>
@@ -105,5 +137,3 @@ const TraitHierarchy = ({ searchResult, data }) => {
 };
 
 export default TraitHierarchy;
-
-
