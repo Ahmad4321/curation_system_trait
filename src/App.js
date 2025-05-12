@@ -149,7 +149,7 @@ const App = () => {
           </Grid>
           <Grid item size={6}>
             <Paper elevation={2} sx={{ p: 2, height: "100%" }}>
-              <ActionPanel data={searchdata}/>
+              <ActionPanel isLogged={isLoggedIn} data={searchdata}/>
               <Divider textAlign="center">****</Divider>
               <EvidenceAccordion />
             </Paper>
