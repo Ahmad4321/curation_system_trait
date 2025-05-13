@@ -71,7 +71,7 @@ const ActionPanel = ({data,isLogged,trait}) => {
           {/* evaluation */}
           
         </List>
-        {trait.evaluation}
+        {trait ? trait.evaluation : ""}
       </Box>
 
       <Box sx={{ mb: 3 }}>
