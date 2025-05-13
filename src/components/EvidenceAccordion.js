@@ -27,6 +27,7 @@ const EvidenceAccordion = ({trait}) => {
               <Chip label="Evidence" variant="outlined" sx={{ mr: 2 }} />
               <ListItemText primary="Trait correlation data from RiceVar database" />
             </ListItem>
+            {trait.evaluation}
             <Divider />
           </List>
         </AccordionDetails>
@@ -42,6 +43,7 @@ const EvidenceAccordion = ({trait}) => {
               <Chip label="Evidence" variant="outlined" sx={{ mr: 2 }} />
               <ListItemText primary="Annotations from 5 published papers" />
             </ListItem>
+            {trait.evaluation}
             <Divider />
           </List>
         </AccordionDetails>
@@ -57,6 +59,7 @@ const EvidenceAccordion = ({trait}) => {
               <Chip label="Evidence" variant="outlined" sx={{ mr: 2 }} />
               <ListItemText primary="AI model predictions with 92% confidence" />
             </ListItem>
+            {trait.evaluation}
             <Divider />
           </List>
         </AccordionDetails>

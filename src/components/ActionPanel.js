@@ -68,8 +68,10 @@ const ActionPanel = ({data,isLogged,trait}) => {
       <Box sx={{ mb: 3 }}>
         <Typography variant="subtitle1">Existing Comments</Typography>
         <List dense>
-          {trait.evaluation}
+          {/* evaluation */}
+          
         </List>
+        {trait.evaluation}
       </Box>
 
       <Box sx={{ mb: 3 }}>

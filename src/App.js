@@ -118,7 +118,6 @@ const App = () => {
   };
   const handleTraitSelect = (trait) => {
     setSelectedTrait(trait);
-    console.log(selectedTrait)
   };
 
   return (
