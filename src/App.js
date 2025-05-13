@@ -102,6 +102,7 @@ const App = () => {
 
   const handleLoginOpen = () => setOpenLogin(true);
   const handleLoginClose = () => setOpenLogin(false);
+  const [selectedTrait, setSelectedTrait] = useState(null);
 
 
   const handleLoginSubmit = () => {
@@ -114,6 +115,9 @@ const App = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+  };
+  const handleTraitSelect = (trait) => {
+    setSelectedTrait(trait);
   };
 
   return (
@@ -144,14 +148,15 @@ const App = () => {
               <TraitHierarchy
                 searchResult={searchResult}
                 data={convertDataIdsToStrings(sampleData.children)}
+                onTraitSelect={setSelectedTrait}
               />
             </Paper>
           </Grid>
           <Grid item size={6}>
             <Paper elevation={2} sx={{ p: 2, height: "100%" }}>
-              <ActionPanel isLogged={isLoggedIn} data={searchdata}/>
+              <ActionPanel data={searchdata} isLogged={isLoggedIn} trait={selectedTrait}/>
               <Divider textAlign="center">****</Divider>
-              <EvidenceAccordion />
+              <EvidenceAccordion trait={selectedTrait}/>
             </Paper>
           </Grid>
         </Grid>

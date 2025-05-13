@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const EvidenceAccordion = ({trait}) => {
+const EvidenceAccordion = () => {
   return (
     <Paper elevation={2}>
       <Accordion>
@@ -27,7 +27,6 @@ const EvidenceAccordion = ({trait}) => {
               <Chip label="Evidence" variant="outlined" sx={{ mr: 2 }} />
               <ListItemText primary="Trait correlation data from RiceVar database" />
             </ListItem>
-            {trait.evaluation}
             <Divider />
           </List>
         </AccordionDetails>
@@ -43,7 +42,6 @@ const EvidenceAccordion = ({trait}) => {
               <Chip label="Evidence" variant="outlined" sx={{ mr: 2 }} />
               <ListItemText primary="Annotations from 5 published papers" />
             </ListItem>
-            {trait.evaluation}
             <Divider />
           </List>
         </AccordionDetails>
@@ -59,7 +57,6 @@ const EvidenceAccordion = ({trait}) => {
               <Chip label="Evidence" variant="outlined" sx={{ mr: 2 }} />
               <ListItemText primary="AI model predictions with 92% confidence" />
             </ListItem>
-            {trait.evaluation}
             <Divider />
           </List>
         </AccordionDetails>

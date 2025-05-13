@@ -23,3 +23,8 @@ yarn-debug.log*
 yarn-error.log*
 build
 node_modules
+<<<<<<< HEAD
+=======
+package.json
+package-lock.json
+>>>>>>> feature-branch

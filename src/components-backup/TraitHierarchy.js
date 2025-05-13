@@ -15,7 +15,7 @@ import {
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
-const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "",onTraitSelect }) => {
+const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "" }) => {
   const [open, setOpen] = useState(false);
   const hasChildren = node.children && node.children.length > 0;
   const isMatched = searchTerm && node.ename.toLowerCase().includes(searchTerm.toLowerCase());
@@ -26,18 +26,10 @@ const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "",onTraitSe
     }
   }, [searchPath, node.id, isMatched]);
 
-  const handleClick = () => {
-    if (hasChildren) {
-      setOpen(!open);
-    }
-    // Always call onTraitSelect when item is clicked
-    onTraitSelect(node);
-  };
-
   return (
     <>
       <ListItem
-        onClick={handleClick}
+        onClick={() => setOpen(!open)}
         sx={{
           pl: level * 4,
           backgroundColor: isMatched ? "rgba(25, 118, 210, 0.08)" : "inherit",
@@ -71,7 +63,6 @@ const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "",onTraitSe
                 level={level + 1}
                 searchPath={searchPath}
                 searchTerm={searchTerm}
-                onTraitSelect={onTraitSelect}
               />
             ))}
           </List>
@@ -82,7 +73,7 @@ const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "",onTraitSe
   );
 };
 
-const TraitHierarchy = ({ searchTerm, data, onTraitSelect }) => {
+const TraitHierarchy = ({ searchTerm, data }) => {
   const [expandedPaths, setExpandedPaths] = useState([]);
   const [traitHierarchy, setTraitHierarchy] = useState([]);
 
@@ -138,7 +129,6 @@ const TraitHierarchy = ({ searchTerm, data, onTraitSelect }) => {
             node={trait}
             searchPath={expandedPaths}
             searchTerm={searchTerm}
-            onTraitSelect={onTraitSelect}
           />
         ))}
       </List>
