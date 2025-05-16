@@ -96,6 +96,9 @@ const convertDataIdsToStrings = (nodes) => {
 const App = () => {
   // define trait data
   const [traitData, setTraitData] = useState(null);
+  const [evaluationValue, setEvaluationValue] = useState(null);
+
+  const [selectedNodeId, setSelectedNodeId] = useState(null);
   // set Searchbox data
   const [searchinital, setSearchinital] = useState(null);
   // set loading state
@@ -259,12 +262,14 @@ const App = () => {
                 searchResult={searchResult}
                 data={traitData}
                 onTraitSelect={setSelectedTrait}
+                setSelectedNodeId={setSelectedNodeId}
+                onEvaluationValue={setEvaluationValue}
               />
             </Paper>
           </Grid>
           <Grid item size={6}>
             <Paper elevation={2} sx={{ p: 2, height: "100%" }}>
-              <ActionPanel data={searchdata} isLogged={isLoggedIn} userData={userData} trait={selectedTrait} searchquery={searchResult}/>
+              <ActionPanel data={searchdata} isLogged={isLoggedIn} userData={userData} trait={selectedTrait} searchquery={searchResult} onEvaluationValue={evaluationValue}/>
               <Divider textAlign="center">****</Divider>
               <EvidenceAccordion trait={selectedTrait}/>
             </Paper>

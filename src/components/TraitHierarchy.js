@@ -1,5 +1,5 @@
 // src/components/TraitHierarchy.jsx
-// 
+//
 
 import React, { useEffect, useState } from "react";
 import {
@@ -15,10 +15,19 @@ import {
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
-const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "",onTraitSelect }) => {
+const TraitItem = ({
+  node,
+  level = 0,
+  searchPath = [],
+  searchTerm = "",
+  onTraitSelect,
+  onEvaluationValue,
+}) => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const hasChildren = node.children && node.children.length > 0;
-  const isMatched = searchTerm && node.ename.toLowerCase().includes(searchTerm.toLowerCase());
+  const isMatched =
+    searchTerm && node.ename.toLowerCase().includes(searchTerm.toLowerCase());
 
   useEffect(() => {
     if (searchPath.includes(node.id) || isMatched) {
@@ -26,12 +35,45 @@ const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "",onTraitSe
     }
   }, [searchPath, node.id, isMatched]);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (hasChildren) {
+      const isClosing = open;
       setOpen(!open);
+    
+      if (isClosing) {
+        // Clear table data when node is collapsed
+        onEvaluationValue(null); // Or [] if your table expects an array
+        return; // Don't fetch new data
+      }
     }
     // Always call onTraitSelect when item is clicked
     onTraitSelect(node);
+    console.log(open)
+
+    if (node && node.id && open === false) {
+      setLoading(true);
+      try {
+        const res = await fetch(
+          "http://127.0.0.1:8000/api/fetch_trait_evalutation/",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ trait_id: node ? node.id : "" }),
+          }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          console.log(data)
+          onEvaluationValue(data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      onEvaluationValue([]);
+    }
   };
 
   return (
@@ -72,6 +114,7 @@ const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "",onTraitSe
                 searchPath={searchPath}
                 searchTerm={searchTerm}
                 onTraitSelect={onTraitSelect}
+                onEvaluationValue={onEvaluationValue}
               />
             ))}
           </List>
@@ -82,13 +125,18 @@ const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "",onTraitSe
   );
 };
 
-const TraitHierarchy = ({ searchTerm, data, onTraitSelect }) => {
+const TraitHierarchy = ({
+  searchTerm,
+  data,
+  onTraitSelect,
+  onEvaluationValue
+}) => {
   const [expandedPaths, setExpandedPaths] = useState([]);
   const [traitHierarchy, setTraitHierarchy] = useState([]);
 
   const findMatchingPaths = (nodes, term, currentPath = []) => {
     let paths = [];
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       const newPath = [...currentPath, node.id];
       if (term && node.ename.toLowerCase().includes(term.toLowerCase())) {
         paths.push(newPath);
@@ -102,9 +150,9 @@ const TraitHierarchy = ({ searchTerm, data, onTraitSelect }) => {
 
   const getAllParentPaths = (paths) => {
     const allPaths = new Set();
-    paths.forEach(path => {
+    paths.forEach((path) => {
       for (let i = 1; i < path.length; i++) {
-        allPaths.add(path.slice(0, i).join('-'));
+        allPaths.add(path.slice(0, i).join("-"));
       }
     });
     return Array.from(allPaths);
@@ -139,6 +187,7 @@ const TraitHierarchy = ({ searchTerm, data, onTraitSelect }) => {
             searchPath={expandedPaths}
             searchTerm={searchTerm}
             onTraitSelect={onTraitSelect}
+            onEvaluationValue={onEvaluationValue}
           />
         ))}
       </List>
