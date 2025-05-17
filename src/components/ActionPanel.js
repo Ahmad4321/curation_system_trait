@@ -179,7 +179,7 @@ const ActionPanel = ({
             <Table stickyHeader size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell>comment</TableCell>
+                  <TableCell>Comment</TableCell>
                   <TableCell>Expert</TableCell>
                   <TableCell>DateTime</TableCell>
                 </TableRow>
@@ -290,6 +290,7 @@ const ActionPanel = ({
             color="primary"
             onClick={handleSubmit}
             fullWidth
+            disabled={!newComment || !username}
           >
             Save Evaluation
           </Button>
