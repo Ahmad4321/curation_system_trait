@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-scripts": "5.0.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
-    "bootstrap": "^5.3.6"
+    "@nosferatu500/theme-file-explorer": "^3.0.21",
+    "bootstrap": "^5.3.6",
+    "rc-tree": "^5.13.1",
+    "react": " ^17.0.0 || ^18.0.0  || ^19.1.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.1.0",
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

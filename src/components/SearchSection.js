@@ -31,7 +31,6 @@ const SearchSection = ({ onSearchSubmit, data }) => {
 
   const handleSubmit = () => {
     // Use either the selected option label or the raw input value
-    console.log("Searching for:", inputValue);
     const searchTerm = inputValue //selectedOption?.label || inputValue;
     if (searchTerm) {
       onSearchSubmit(searchTerm);
