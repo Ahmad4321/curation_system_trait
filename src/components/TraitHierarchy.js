@@ -112,7 +112,7 @@ const TraitHierarchyRcTree = ({
         selectedKeys={selectedKeys}
         onExpand={setExpandedKeys}
         onSelect={onSelect}
-        defaultExpandParent
+        defaultExpandParent={true}
       />
     </Box>
     </>

@@ -166,9 +166,6 @@ const App = () => {
       </Backdrop>
       <CssBaseline />
       <Container maxWidth="xl" sx={{ my: 4 }}>
-        {/* <Typography variant="h4" component="h1" gutterBottom textAlign="center">
-          A Curation System for Rice Trait Ontology
-        </Typography> */}
         <Header />
         {/* Login/Sign-out Button */}
         <Box sx={{ position: "absolute", top: 16, right: 16 }}>
@@ -186,7 +183,7 @@ const App = () => {
 
           <Grid container spacing={3} sx={{ mt: 2,paddingBottom:12 }} className="grid-container">
             <Grid item size={6} >
-              <Paper elevation={2} sx={{ p: 2, height: "700px", overflowY: "auto" }}>
+              <Paper elevation={2} sx={{ p: 2, height: "500px", overflowY: "auto" }}>
                 <TraitHierarchy
                   searchResult={searchResult}
                   data={traitData}
@@ -197,7 +194,7 @@ const App = () => {
               </Paper>
             </Grid>
             <Grid item size={6}>
-              <Paper elevation={2} sx={{ p: 2, height: "700px", overflowY: "auto"}}>
+              <Paper elevation={2} sx={{ p: 2, height: "500px", overflowY: "auto"}}>
                 <ActionPanel
                   data={searchdata}
                   isLogged={isLoggedIn}
