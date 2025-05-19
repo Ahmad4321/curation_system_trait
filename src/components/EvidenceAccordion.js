@@ -1,69 +1,65 @@
 // src/components/EvidenceAccordion.jsx
 import React from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  Chip,
-  Paper,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, Tabs, Tab, Paper } from "@mui/material";
 
-const EvidenceAccordion = ({trait}) => {
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
+const EvidenceAccordion = ({ trait }) => {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   return (
     <Paper elevation={2}>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Rice-Alterome</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <List>
-            <ListItem>
-              <Chip label="Evidence" variant="outlined" sx={{ mr: 2 }} />
-              <ListItemText primary="Trait correlation data from RiceVar database" />
-            </ListItem>
-            {trait ? trait.evaluation : ""}
-            <Divider />
-          </List>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">PubAnnotation</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <List>
-            <ListItem>
-              <Chip label="Evidence" variant="outlined" sx={{ mr: 2 }} />
-              <ListItemText primary="Annotations from 5 published papers" />
-            </ListItem>
-            {trait ? trait.evaluation : ""}
-            <Divider />
-          </List>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">LLM</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <List>
-            <ListItem>
-              <Chip label="Evidence" variant="outlined" sx={{ mr: 2 }} />
-              <ListItemText primary="AI model predictions with 92% confidence" />
-            </ListItem>
-            {trait ? trait.evaluation : ""}
-            <Divider />
-          </List>
-        </AccordionDetails>
-      </Accordion>
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            <Tab label="Rice-Alterome" {...a11yProps(0)} />
+            <Tab label="PubAnnotation" {...a11yProps(1)} />
+            <Tab label="LLM" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <CustomTabPanel value={value} index={0}>
+          {trait
+            ? trait.trait[0].rice_alterome_evidence
+            : "No data found!"}
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          {trait
+            ? trait.trait[0].pubAnnotation_evidence
+            : "No data found!"}
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          {trait
+            ? trait.trait[0].llm_evidence
+            : "No data found!"}
+        </CustomTabPanel>
+      </Box>
     </Paper>
   );
 };

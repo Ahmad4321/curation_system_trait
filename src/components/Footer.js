@@ -36,10 +36,10 @@ const Footer = () => {
             <strong>Affiliation:</strong> College of Informatics, Huazhong Agricultural University, Wuhan, Hubei, China
           </Typography>
           <Typography>
-            <strong>Lab PI:</strong> Jingbo Xia
+            <strong>Main Developer:</strong> Muhammad Ahmad Javeed
           </Typography>
-          <Typography mt={1}>
-            All the contributors refer to above publications.
+          <Typography>
+            <strong>Lab PI:</strong> Jingbo Xia
           </Typography>
         </Box>
       </Container>

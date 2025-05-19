@@ -17,19 +17,15 @@ import {
   TableHead,
   Paper,
   TableContainer,
-  Backdrop,
-  CircularProgress,
 } from "@mui/material";
 
 const ActionPanel = ({
-  data,
   isLogged,
   trait,
   userData,
   searchquery,
   onEvaluationValue,
 }) => {
-
   const [newComment, setNewComment] = useState("");
   const [action, setAction] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,6 +33,7 @@ const ActionPanel = ({
   const [loading, setLoading] = useState(true);
 
   const [evaluationValue, setEvaluationValue] = useState("");
+  const [traitInformation, setTraitInformation] = useState("");
 
   const [username, setUsername] = useState("");
 
@@ -49,10 +46,12 @@ const ActionPanel = ({
   }, [userData]);
 
   useEffect(() => {
-    if (onEvaluationValue && onEvaluationValue.data) {
+    if (onEvaluationValue) {
       setEvaluationValue(onEvaluationValue.data);
+      setTraitInformation(onEvaluationValue.Trait_information);
     } else {
       setEvaluationValue([]);
+      setTraitInformation(null);
     }
   }, [onEvaluationValue]);
 
@@ -84,6 +83,7 @@ const ActionPanel = ({
   // }, []);
 
   const handleSubmit = async () => {
+    setLoading(true);
     if (!newComment || !username) {
       setMsg("❌ Please fill in all fields.");
       return;
@@ -113,7 +113,6 @@ const ActionPanel = ({
       const data = await res.json();
 
       if (res.ok) {
-        console.log("Response data:", data);
         setMsg("✅" + data.msg);
         setEvaluationValue((prev) => [...prev, data.evaluation]);
         setNewComment("");
@@ -126,6 +125,7 @@ const ActionPanel = ({
     } catch (err) {
       setMsg("❌ Error connecting to server.");
     }
+    setLoading(false);
   };
 
   return (
@@ -139,13 +139,15 @@ const ActionPanel = ({
       </Backdrop> */}
 
       <Box>
-        <Typography variant="h6" gutterBottom>
+        {/* <Typography variant="h6" gutterBottom>
           Comments and Action Panel
-        </Typography>
+        </Typography> */}
 
-        {trait && trait.evaluations && (
-          <Typography variant="h6" gutterBottom>
-            Select trait :{trait.name}
+        {/* Specific trait info */}
+
+        {trait && (
+          <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
+            <strong>Selected trait</strong> : {trait.ename}
           </Typography>
         )}
 
@@ -167,12 +169,70 @@ const ActionPanel = ({
         <Typography variant="subtitle1">Existing Comments</Typography>
         {trait ? trait.evaluation : ""}
       </Box> */}
+        <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
+          <strong>Trait Definition</strong>
+        </Typography>
+        <Box sx={{ mb: 3 }}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              maxHeight: 200, // Set vertical height
+              overflowY: "auto", // Enable scroll
+            }}
+          >
+            <Table stickyHeader size="small">
+              <TableHead>
+              </TableHead>
+              <TableBody>
+                {traitInformation
+                  ? traitInformation.map((row, index) => (
+                      <>
+                        {row.trait_ontology_id && (
+                          <TableRow key={index}>
+                            <TableCell> <strong>ID</strong></TableCell>
+                            <TableCell>{row.trait_ontology_id}</TableCell>
+                          </TableRow>
+                        )}
+                        {row.sentence && (
+                          <TableRow key={index}>
+                            <TableCell><strong>Definition</strong></TableCell>
+                            <TableCell>{row.sentence}</TableCell>
+                          </TableRow>
+                        )}
+                        {row.is_a && (
+                          <TableRow key={index}>
+                            <TableCell><strong>is_a</strong></TableCell>
+                            <TableCell>{row.is_a}</TableCell>
+                          </TableRow>
+                        )}
+                        {row.synonym && (
+                          <TableRow key={index}>
+                            <TableCell><strong>Synonym</strong></TableCell>
+                            <TableCell>{row.synonym}</TableCell>
+                          </TableRow>
+                        )}
+                        {row.comment && (
+                          <TableRow key={index}>
+                            <TableCell><strong>Comment</strong></TableCell>
+                            <TableCell>{row.comment}</TableCell>
+                          </TableRow>
+                        )}
+                      </>
+                    ))
+                  : ""}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+        <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
+          <strong>Expert Comments</strong>
+        </Typography>
 
         <Box sx={{ mb: 3 }}>
           <TableContainer
             component={Paper}
             sx={{
-              maxHeight: 300, // Set vertical height
+              maxHeight: 200, // Set vertical height
               overflowY: "auto", // Enable scroll
             }}
           >
@@ -200,10 +260,10 @@ const ActionPanel = ({
         </Box>
 
         <Box gap={2} sx={{ mb: 3 }}>
-          <Typography variant="subtitle1">New Comments</Typography>
           <TextField
             fullWidth
             multiline
+            label="Expert Comment"
             rows={3}
             value={newComment}
             onChange={(e) => {
@@ -218,6 +278,7 @@ const ActionPanel = ({
               label="Expert Name"
               size="small"
               value={username}
+              placeholder="e.g. John Doe|Field Name or Lab Name"
               onChange={(e) => {
                 setUsername(e.target.value);
                 setMsg("");

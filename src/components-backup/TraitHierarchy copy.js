@@ -57,7 +57,6 @@ const TraitItem = ({
     }
     // Always call onTraitSelect when item is clicked
     onTraitSelect(node);
-    console.log(open)
 
     if (node && node.id && open === false) {
       setLoading(true);
@@ -72,11 +71,9 @@ const TraitItem = ({
         );
         if (res.ok) {
           const data = await res.json();
-          console.log(data)
           onEvaluationValue(data);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }

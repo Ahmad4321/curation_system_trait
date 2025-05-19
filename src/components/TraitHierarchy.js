@@ -9,7 +9,6 @@ const TraitHierarchyRcTree = ({
   onTraitSelect,
   onEvaluationValue,
 }) => {
-  console.log(searchResult)
   const [treeData, setTreeData] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
@@ -86,7 +85,7 @@ const TraitHierarchyRcTree = ({
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ trait_id: traitId }),
+          body: JSON.stringify({ trait_id: traitId ,name:node.title.props.children[0]}),
         }
       );
 
@@ -97,12 +96,12 @@ const TraitHierarchyRcTree = ({
         onEvaluationValue && onEvaluationValue([]);
       }
     } catch (err) {
-      console.error("Fetch error:", err);
       onEvaluationValue && onEvaluationValue([]);
     }
   };
 
   return (
+    <>
     <Box>
       <Typography variant="h6" gutterBottom>
         Trait Hierarchy
@@ -116,6 +115,7 @@ const TraitHierarchyRcTree = ({
         defaultExpandParent
       />
     </Box>
+    </>
   );
 };
 

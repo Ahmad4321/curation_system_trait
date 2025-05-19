@@ -77,7 +77,7 @@ const App = () => {
         }
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      // console.error("Error logging in:", error);
     } finally {
       setLoading(false);
     }
@@ -97,7 +97,7 @@ const App = () => {
         setMsg("");
       }
     } catch (error) {
-      console.error("Error logging out:", error);
+      // console.error("Error logging out:", error);
     } finally {
       setLoading(false);
     }
@@ -119,7 +119,6 @@ const App = () => {
           setTraitData(data);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -144,7 +143,7 @@ const App = () => {
           setSearchinital(data);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error("Error fetching data:", error);
       }
     };
 
@@ -184,11 +183,10 @@ const App = () => {
         <Divider textAlign="center"></Divider>
         <>
           <SearchSection onSearchSubmit={setSearchResult} data={searchinital} />
-          {console.log(searchResult)}
 
-          <Grid container spacing={3} sx={{ mt: 2 }} className="grid-container">
-            <Grid item size={6} sx={{ height: 500, overflowY: "auto" }}>
-              <Paper elevation={2} sx={{ p: 2, height: "100%" }}>
+          <Grid container spacing={3} sx={{ mt: 2,paddingBottom:12 }} className="grid-container">
+            <Grid item size={6} >
+              <Paper elevation={2} sx={{ p: 2, height: "700px", overflowY: "auto" }}>
                 <TraitHierarchy
                   searchResult={searchResult}
                   data={traitData}
@@ -199,7 +197,7 @@ const App = () => {
               </Paper>
             </Grid>
             <Grid item size={6}>
-              <Paper elevation={2} sx={{ p: 2, height: "100%" }}>
+              <Paper elevation={2} sx={{ p: 2, height: "700px", overflowY: "auto"}}>
                 <ActionPanel
                   data={searchdata}
                   isLogged={isLoggedIn}
@@ -209,7 +207,7 @@ const App = () => {
                   onEvaluationValue={evaluationValue}
                 />
                 <Divider textAlign="center">****</Divider>
-                <EvidenceAccordion trait={selectedTrait} />
+                <EvidenceAccordion trait={evaluationValue} />
               </Paper>
             </Grid>
           </Grid>
