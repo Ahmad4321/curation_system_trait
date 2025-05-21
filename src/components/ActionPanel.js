@@ -30,7 +30,7 @@ const ActionPanel = ({
   const [action, setAction] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [msg, setMsg] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [setLoading] = useState(true);
 
   const [evaluationValue, setEvaluationValue] = useState("");
   const [traitInformation, setTraitInformation] = useState("");

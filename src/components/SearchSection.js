@@ -16,16 +16,16 @@ const SearchSection = ({ onSearchSubmit, data }) => {
   const [inputValue, setInputValue] = useState("");
   
   // Extract all possible searchable terms from the data
-  const extractSearchTerms = (nodes) => {
-    let terms = [];
-    nodes.forEach(node => {
-      terms.push({ label: node.ename, value: node.id });
-      if (node.children) {
-        terms = terms.concat(extractSearchTerms(node.children));
-      }
-    });
-    return terms;
-  };
+  // const extractSearchTerms = (nodes) => {
+  //   let terms = [];
+  //   nodes.forEach(node => {
+  //     terms.push({ label: node.ename, value: node.id });
+  //     if (node.children) {
+  //       terms = terms.concat(extractSearchTerms(node.children));
+  //     }
+  //   });
+  //   return terms;
+  // };
 
   const searchOptions = data //? extractSearchTerms(data) : [];
 

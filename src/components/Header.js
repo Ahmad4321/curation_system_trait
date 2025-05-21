@@ -3,9 +3,7 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
   Box,
-  Container
 } from '@mui/material';
 
 const Header = () => {

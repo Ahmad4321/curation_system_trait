@@ -29,7 +29,7 @@ const App = () => {
   const [traitData, setTraitData] = useState(null);
   const [evaluationValue, setEvaluationValue] = useState(null);
 
-  const [selectedNodeId, setSelectedNodeId] = useState(null);
+  const [setSelectedNodeId] = useState(null);
   // set Searchbox data
   const [searchinital, setSearchinital] = useState(null);
   // set loading state
@@ -102,9 +102,9 @@ const App = () => {
       setLoading(false);
     }
   };
-  const handleTraitSelect = (trait) => {
-    setSelectedTrait(trait);
-  };
+  // const handleTraitSelect = (trait) => {
+  //   setSelectedTrait(trait);
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
