@@ -203,9 +203,16 @@ const App = () => {
                   searchquery={searchResult}
                   onEvaluationValue={evaluationValue}
                 />
-                <Divider textAlign="center">****</Divider>
-                <EvidenceAccordion trait={evaluationValue} />
+                {/* <Divider textAlign="center">****</Divider> */}
+                {/* <EvidenceAccordion trait={evaluationValue} /> */}
               </Paper>
+            </Grid>
+            {/* Drop Here */}
+            <Grid item size={12}>
+              {/* <Paper elevation={2} sx={{ p: 2, height: "500px", overflowY: "auto"}}>
+                
+              </Paper> */}
+              <EvidenceAccordion trait={evaluationValue} />
             </Grid>
           </Grid>
         </>

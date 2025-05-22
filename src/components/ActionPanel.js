@@ -188,31 +188,31 @@ const ActionPanel = ({
                   ? traitInformation.map((row, index) => (
                       <>
                         {row.trait_ontology_id && (
-                          <TableRow key={index}>
+                          <TableRow key={index+"1"}>
                             <TableCell> <strong>ID</strong></TableCell>
                             <TableCell>{row.trait_ontology_id}</TableCell>
                           </TableRow>
                         )}
                         {row.sentence && (
-                          <TableRow key={index}>
+                          <TableRow key={index+"2"}>
                             <TableCell><strong>Definition</strong></TableCell>
                             <TableCell>{row.sentence}</TableCell>
                           </TableRow>
                         )}
                         {row.is_a && (
-                          <TableRow key={index}>
+                          <TableRow key={index+"3"}>
                             <TableCell><strong>is_a</strong></TableCell>
                             <TableCell>{row.is_a}</TableCell>
                           </TableRow>
                         )}
                         {row.synonym && (
-                          <TableRow key={index}>
+                          <TableRow key={index+"4"}>
                             <TableCell><strong>Synonym</strong></TableCell>
                             <TableCell>{row.synonym}</TableCell>
                           </TableRow>
                         )}
                         {row.comment && (
-                          <TableRow key={index}>
+                          <TableRow key={index+"5"}>
                             <TableCell><strong>Comment</strong></TableCell>
                             <TableCell>{row.comment}</TableCell>
                           </TableRow>
