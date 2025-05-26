@@ -1,43 +1,40 @@
-// src/components/TraitHierarchy.jsx
-// 
-
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  Collapse,
-  Chip,
-} from "@mui/material";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+import Tree from "rc-tree";
+import "rc-tree/assets/index.css";
+import { Box, Typography, Chip } from "@mui/material";
 
-const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "" }) => {
-  const [open, setOpen] = useState(false);
-  const hasChildren = node.children && node.children.length > 0;
-  const isMatched = searchTerm && node.ename.toLowerCase().includes(searchTerm.toLowerCase());
+const TraitHierarchyRcTree = ({
+  searchResult,
+  data,
+  onTraitSelect,
+  onEvaluationValue,
+}) => {
+  const [treeData, setTreeData] = useState([]);
+  const [expandedKeys, setExpandedKeys] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState([]);
 
-  useEffect(() => {
-    if (searchPath.includes(node.id) || isMatched) {
-      setOpen(true);
-    }
-  }, [searchPath, node.id, isMatched]);
+  // Utility: Flatten tree to find matched nodes and expand paths
+  const findMatchesAndExpanded = (nodes, term, parentKeys = []) => {
+    let expanded = [];
+    let matchedKeys = new Set();
 
-  return (
-    <>
-      <ListItem
-        onClick={() => setOpen(!open)}
-        sx={{
-          pl: level * 4,
-          backgroundColor: isMatched ? "rgba(25, 118, 210, 0.08)" : "inherit",
-          cursor: hasChildren ? "pointer" : "default",
-        }}
-      >
-        <ListItemText
-          primary={
+    const recurse = (list, path = []) =>
+      list.map((node) => {
+        const key = node.id.toString();
+        const newPath = [...path, key];
+        const isMatched =
+          term && node.ename.toLowerCase().includes(term.toLowerCase());
+
+        if (isMatched) {
+          matchedKeys.add(key);
+          // Expand all ancestors
+          for (let i = 0; i < newPath.length - 1; i++) {
+            expanded.push(newPath[i]);
+          }
+        }
+
+        return {
+          title: (
             <>
               {node.ename}
               {isMatched && (
@@ -49,91 +46,77 @@ const TraitItem = ({ node, level = 0, searchPath = [], searchTerm = "" }) => {
                 />
               )}
             </>
-          }
-        />
-        {hasChildren && (open ? <ExpandLess /> : <ExpandMore />)}
-      </ListItem>
-      {hasChildren && (
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {node.children.map((child) => (
-              <TraitItem
-                key={child.id}
-                node={child}
-                level={level + 1}
-                searchPath={searchPath}
-                searchTerm={searchTerm}
-              />
-            ))}
-          </List>
-        </Collapse>
-      )}
-      <Divider />
-    </>
-  );
-};
+          ),
+          key,
+          children: node.children
+            ? recurse(node.children, newPath)
+            : undefined,
+        };
+      });
 
-const TraitHierarchy = ({ searchTerm, data }) => {
-  const [expandedPaths, setExpandedPaths] = useState([]);
-  const [traitHierarchy, setTraitHierarchy] = useState([]);
-
-  const findMatchingPaths = (nodes, term, currentPath = []) => {
-    let paths = [];
-    nodes.forEach(node => {
-      const newPath = [...currentPath, node.id];
-      if (term && node.ename.toLowerCase().includes(term.toLowerCase())) {
-        paths.push(newPath);
-      }
-      if (node.children) {
-        paths = paths.concat(findMatchingPaths(node.children, term, newPath));
-      }
-    });
-    return paths;
-  };
-
-  const getAllParentPaths = (paths) => {
-    const allPaths = new Set();
-    paths.forEach(path => {
-      for (let i = 1; i < path.length; i++) {
-        allPaths.add(path.slice(0, i).join('-'));
-      }
-    });
-    return Array.from(allPaths);
+    const transformed = recurse(nodes);
+    return {
+      treeData: transformed,
+      expandedKeys: Array.from(new Set(expanded)),
+      matchedKeys,
+    };
   };
 
   useEffect(() => {
-    if (data) {
-      setTraitHierarchy(data);
-    }
-  }, [data]);
+    if (!data) return;
+    const { treeData: newTreeData, expandedKeys: newExpanded } =
+      findMatchesAndExpanded(data, searchResult);
+    setTreeData(newTreeData);
+    setExpandedKeys(newExpanded);
+  }, [data, searchResult]);
 
-  useEffect(() => {
-    if (searchTerm) {
-      const matchingPaths = findMatchingPaths(data, searchTerm);
-      const pathsToExpand = getAllParentPaths(matchingPaths);
-      setExpandedPaths(pathsToExpand);
-    } else {
-      setExpandedPaths([]);
+  const onSelect = async (keys, info) => {
+    setSelectedKeys(keys);
+    const node = info.node;
+    const traitId = node.key;
+
+    // Simulate `onTraitSelect`
+    onTraitSelect && onTraitSelect({ id: traitId, ename: node.title });
+
+    // Fetch evaluation data
+    try {
+      const res = await fetch(
+        "http://127.0.0.1:8000/rice_trait_ontology_curation_system/fetch_trait_evalutation/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ trait_id: traitId ,name:node.title.props.children[0]}),
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        onEvaluationValue && onEvaluationValue(data);
+      } else {
+        onEvaluationValue && onEvaluationValue([]);
+      }
+    } catch (err) {
+      onEvaluationValue && onEvaluationValue([]);
     }
-  }, [searchTerm, data]);
+  };
 
   return (
+    <>
     <Box>
       <Typography variant="h6" gutterBottom>
         Trait Hierarchy
       </Typography>
-      <List>
-        {traitHierarchy.map((trait) => (
-          <TraitItem
-            key={trait.id}
-            node={trait}
-            searchPath={expandedPaths}
-            searchTerm={searchTerm}
-          />
-        ))}
-      </List>
+      <Tree
+        treeData={treeData}
+        expandedKeys={expandedKeys}
+        selectedKeys={selectedKeys}
+        onExpand={setExpandedKeys}
+        onSelect={onSelect}
+        defaultExpandParent={true}
+      />
     </Box>
+    </>
   );
 };
 
-export default TraitHierarchy;
+export default TraitHierarchyRcTree;

@@ -81,7 +81,7 @@ const TraitHierarchyRcTree = ({
     // Fetch evaluation data
     try {
       const res = await fetch(
-        "http://127.0.0.1:8000/api/fetch_trait_evalutation/",
+        "http://127.0.0.1:8000/rice_trait_ontology_curation_system/fetch_trait_evalutation/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

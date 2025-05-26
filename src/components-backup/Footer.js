@@ -5,17 +5,19 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        backgroundColor: '#0f6588', 
+        backgroundColor: '#0f6588', // Blue background similar to screenshot
         color: 'white',
         paddingY: 6,
         textAlign: 'center',
       }}
     >
       <Container maxWidth="md">
+        {/* Main Title */}
         <Typography variant="h4" fontWeight="bold" gutterBottom>
           Developing Team
         </Typography>
 
+        {/* Lab Logo and Name */}
         <Stack direction="column" alignItems="center" spacing={1}>
           <Box
             component="img"

@@ -30,18 +30,18 @@ const App = () => {
   const [evaluationValue, setEvaluationValue] = useState(null);
 
   const [setSelectedNodeId] = useState(null);
-  // set Searchbox data
+
   const [searchinital, setSearchinital] = useState(null);
-  // set loading state
+
   const [loading, setLoading] = useState(true);
 
   const [searchResult, setSearchResult] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State for login
-  const [openLogin, setOpenLogin] = useState(false); // Dialog open state
-  const [username, setUsername] = useState(""); // Username state
-  const [password, setPassword] = useState(""); // Password state
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [openLogin, setOpenLogin] = useState(false); 
+  const [username, setUsername] = useState(""); 
+  const [password, setPassword] = useState(""); 
   const [msg, setMsg] = useState("");
-  const [userData, setUserData] = useState(null); // User data state
+  const [userData, setUserData] = useState(null); 
 
   const handleLoginOpen = () => setOpenLogin(true);
   const handleLoginClose = () => setOpenLogin(false);
@@ -50,9 +50,9 @@ const App = () => {
   const handleLoginSubmit = async () => {
     setLoading(true);
     try {
-      // For simplicity, assuming any non-empty username and password is valid
+      
       if (username && password) {
-        const res = await fetch("http://127.0.0.1:8000/api/login/", {
+        const res = await fetch("http://127.0.0.1:8000/rice_trait_ontology_curation_system/login/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: username, password: password }),
@@ -63,11 +63,11 @@ const App = () => {
           //  data into state
           setUserData(data.user);
 
-          // set empty username and password fields
+         
           setUsername("");
           setPassword("");
 
-          // Close the login dialog
+          
           setIsLoggedIn(true);
           setOpenLogin(false);
         } else {
@@ -77,17 +77,17 @@ const App = () => {
         }
       }
     } catch (error) {
-      // console.error("Error logging in:", error);
+     
     } finally {
       setLoading(false);
     }
   };
 
   const handleLogout = async () => {
-    // Perform logout logic here
+   
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/logout/", {
+      const res = await fetch("http://127.0.0.1:8000/rice_trait_ontology_curation_system/logout/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -102,15 +102,12 @@ const App = () => {
       setLoading(false);
     }
   };
-  // const handleTraitSelect = (trait) => {
-  //   setSelectedTrait(trait);
-  // };
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/get_data_json/", {
+        const res = await fetch("http://127.0.0.1:8000/rice_trait_ontology_curation_system/get_data_json/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         });
@@ -132,7 +129,7 @@ const App = () => {
       setLoading(true);
       try {
         const res = await fetch(
-          "http://127.0.0.1:8000/api/curation_system_trait/",
+          "http://127.0.0.1:8000/rice_trait_ontology_curation_system/curation_system_trait/",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -143,7 +140,7 @@ const App = () => {
           setSearchinital(data);
         }
       } catch (error) {
-        // console.error("Error fetching data:", error);
+        
       }
     };
 
@@ -151,13 +148,9 @@ const App = () => {
   }, []);
 
 
-  //  background image
-
-  
 
   return (
     <>
-      {/* 🔄 Full-screen loader */}
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
@@ -167,7 +160,6 @@ const App = () => {
       <CssBaseline />
       <Container maxWidth="xl" sx={{ my: 4 }}>
         <Header />
-        {/* Login/Sign-out Button */}
         <Box sx={{ position: "absolute", top: 16, right: 16 }}>
           <Button
             variant="contained"
@@ -203,22 +195,15 @@ const App = () => {
                   searchquery={searchResult}
                   onEvaluationValue={evaluationValue}
                 />
-                {/* <Divider textAlign="center">****</Divider> */}
-                {/* <EvidenceAccordion trait={evaluationValue} /> */}
               </Paper>
             </Grid>
-            {/* Drop Here */}
             <Grid item size={12}>
-              {/* <Paper elevation={2} sx={{ p: 2, height: "500px", overflowY: "auto"}}>
-                
-              </Paper> */}
               <EvidenceAccordion trait={evaluationValue} />
             </Grid>
           </Grid>
         </>
         <Footer />
       </Container>
-      {/* Login Modal */}
       <Dialog open={openLogin} onClose={handleLoginClose}>
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -259,6 +244,7 @@ const App = () => {
             onClick={handleLoginSubmit}
             color="primary"
             variant="contained"
+            disabled={ !username || !password } 
           >
             Login
           </Button>

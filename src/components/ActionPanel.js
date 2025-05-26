@@ -30,7 +30,6 @@ const ActionPanel = ({
   const [action, setAction] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [msg, setMsg] = useState("");
-  const [setLoading] = useState(true);
 
   const [evaluationValue, setEvaluationValue] = useState("");
   const [traitInformation, setTraitInformation] = useState("");
@@ -55,35 +54,7 @@ const ActionPanel = ({
     }
   }, [onEvaluationValue]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (!trait) {
-  //       setLoading(false);
-  //       return;
-  //     }
-  //     setLoading(true);
-  //     try {
-  //       const res = await fetch('http://127.0.0.1:8000/api/fetch_trait_evalutation/', {
-  //           method: 'POST',
-  //           headers: { 'Content-Type': 'application/json' },
-  //           body: JSON.stringify({"trait_id":trait ? trait.id : ""}),
-  //       });
-  //       if (res.ok) {
-  //         const data = await res.json();
-  //         setEvaluationValue(data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   fetchData();
-  // }, []);
-
-  const handleSubmit = async () => {
-    setLoading(true);
+  const handleevoSubmit = async () => {
     if (!newComment || !username) {
       setMsg("❌ Please fill in all fields.");
       return;
@@ -100,7 +71,7 @@ const ActionPanel = ({
 
     try {
       const res = await fetch(
-        "http://127.0.0.1:8000/api/save_action_evaluation/",
+        "http://127.0.0.1:8000/rice_trait_ontology_curation_system/save_action_evaluation/",
         {
           method: "POST",
           headers: {
@@ -125,25 +96,12 @@ const ActionPanel = ({
     } catch (err) {
       setMsg("❌ Error connecting to server.");
     }
-    setLoading(false);
   };
 
   return (
     <>
-      {/* 🔄 Full-screen loader */}
-      {/* <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop> */}
 
       <Box>
-        {/* <Typography variant="h6" gutterBottom>
-          Comments and Action Panel
-        </Typography> */}
-
-        {/* Specific trait info */}
 
         {trait && (
           <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
@@ -151,24 +109,6 @@ const ActionPanel = ({
           </Typography>
         )}
 
-        {/* multiple data */}
-
-        {/* <Box sx={{ mb: 3 }}>
-        <Typography variant="subtitle1">Existing Comments</Typography>
-        <List dense>
-          {comments.map((comment) => (
-            <ListItem key={comment.id}>
-              <ListItemText
-                primary={`${comment.id}- ${comment.text} -${comment.author}-${comment.date}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Box> */}
-        {/* <Box sx={{ mb: 3 }}>
-        <Typography variant="subtitle1">Existing Comments</Typography>
-        {trait ? trait.evaluation : ""}
-      </Box> */}
         <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
           <strong>Trait Definition</strong>
         </Typography>
@@ -176,8 +116,7 @@ const ActionPanel = ({
           <TableContainer
             component={Paper}
             sx={{
-              maxHeight: 200, // Set vertical height
-              overflowY: "auto", // Enable scroll
+              maxHeight: 200,overflowY: "auto", 
             }}
           >
             <Table stickyHeader size="small">
@@ -232,9 +171,8 @@ const ActionPanel = ({
           <TableContainer
             component={Paper}
             sx={{
-              maxHeight: 200, // Set vertical height
-              overflowY: "auto", // Enable scroll
-            }}
+              maxHeight: 200, 
+              overflowY: "auto",            }}
           >
             <Table stickyHeader size="small">
               <TableHead>
@@ -318,28 +256,6 @@ const ActionPanel = ({
               </RadioGroup>
             </FormControl>
 
-            {/* Might be used in future but no no need
-        {(action === "add" || action === "merge") && (
-          <Box sx={{ mt: 2 }}>
-            <FormControl fullWidth>
-              <Select
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                displayEmpty
-                inputProps={{ 'aria-label': 'Search' }}
-              >
-                <MenuItem value="" disabled>
-                  Search and select...
-                </MenuItem>
-                {data.map((option,index) => (
-                  <MenuItem key={index} value={index}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        )} */}
           </Box>
         )}
         <Typography variant="body2" color="error">
@@ -349,9 +265,9 @@ const ActionPanel = ({
           <Button
             variant="contained"
             color="primary"
-            onClick={handleSubmit}
+            onClick={handleevoSubmit}
             fullWidth
-            disabled={!newComment || !username}
+            disabled={!newComment || !username || !trait } 
           >
             Save Evaluation
           </Button>
