@@ -17,6 +17,8 @@ import {
   TableHead,
   Paper,
   TableContainer,
+  CircularProgress,
+  Backdrop,
 } from "@mui/material";
 
 const ActionPanel = ({
@@ -30,6 +32,7 @@ const ActionPanel = ({
   const [action, setAction] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [evaluationValue, setEvaluationValue] = useState("");
   const [traitInformation, setTraitInformation] = useState("");
@@ -55,6 +58,8 @@ const ActionPanel = ({
   }, [onEvaluationValue]);
 
   const handleevoSubmit = async () => {
+
+    setLoading(true);
     if (!newComment || !username) {
       setMsg("❌ Please fill in all fields.");
       return;
@@ -90,16 +95,25 @@ const ActionPanel = ({
         setAction("");
         setSearchTerm("");
         isLogged ? setUsername(username) : setUsername("");
+        setLoading(false);
       } else {
         setMsg(data.error || "❌ Submission failed.");
+        setLoading(false);
       }
     } catch (err) {
       setMsg("❌ Error connecting to server.");
+      setLoading(false);
     }
   };
 
   return (
     <>
+    <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={loading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
 
       <Box>
 
