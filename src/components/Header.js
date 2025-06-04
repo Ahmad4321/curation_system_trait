@@ -20,26 +20,32 @@ const Header = () => {
                 style={{ height: 60 }}
               />
               <Box
-                sx={{ display: "flex", alignItems: "center", paddingLeft: 50 }}
+                sx={{ display: "flex", alignItems: "center", paddingLeft: 50,gap:1 }}
               >
-                <Link href="/" color="inherit" underline="none">
+                <Link href="/rice_trait_ontology_curation_system/" color="inherit" underline="none">
                   <Typography
                     variant="h6"
                     component="div"
                     sx={{ display: { xs: "none", md: "flex" } }}
                   >
-                    Home
+                    Guideline
                   </Typography>
                 </Link>
+                <Typography
+                    variant="h6"
+                    component="div"
+                  >
+                    |
+                  </Typography>
                 <Link
-                  href="/rice-trait-ontology"
+                  href="/rice_trait_ontology_curation_system/rice-trait-ontology/"
                   color="inherit"
                   underline="none"
                 >
                   <Typography
                     variant="h6"
                     component="div"
-                    sx={{ display: { xs: "none", md: "flex" }, padding: 2 }}
+                    sx={{ display: { xs: "none", md: "flex" }}}
                   >
                     Curation System
                   </Typography>
