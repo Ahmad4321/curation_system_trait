@@ -121,7 +121,7 @@ const Introduction = () => {
           contentEn="RTO is short for Rice trait ontology, which is a trait ontology specifically for rice."
           contentZh=""
           bgColor="#e3f2fd"
-          pageLink="http://lit-evi.hzau.edu.cn/RiceTraitOntology/"
+          pageLink="http://127.0.0.1:8000/RiceTraitOntology/"
         />
         <Section
           titleEn="Main functions of RTO curation system"

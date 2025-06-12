@@ -20,6 +20,7 @@ import {
   CircularProgress,
   Backdrop,
 } from "@mui/material";
+import { format } from 'date-fns';
 
 const ActionPanel = ({
   isLogged,
@@ -202,7 +203,7 @@ const ActionPanel = ({
                       <TableRow key={index}>
                         <TableCell>{row.evaluation}</TableCell>
                         <TableCell>{row.expert_name}</TableCell>
-                        <TableCell>{row.created_at}</TableCell>
+                        <TableCell>{format(new Date(row.created_at), "MMMM dd, yyyy hh:mm:ss a")}</TableCell>
                       </TableRow>
                     ))
                   : ""}

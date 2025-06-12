@@ -6,10 +6,12 @@ import {
   Box,
   Link,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
+  let location = useLocation()
   return (
-    <Box>
+    <Box position="relative">
       <Box>
         <AppBar position="static" color="transparent" elevation={0}>
           <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -20,15 +22,15 @@ const Header = () => {
                 style={{ height: 60 }}
               />
               <Box
-                sx={{ display: "flex", alignItems: "center", paddingLeft: 50,gap:1 }}
+                sx={{ display: "flex", alignItems: "center", paddingLeft: 50,gap:1 }} 
               >
                 <Link href="/rice_trait_ontology_curation_system/" color="inherit" underline="none">
                   <Typography
                     variant="h6"
                     component="div"
-                    sx={{ display: { xs: "none", md: "flex" } }}
+                    sx={{ display: { xs: "none", md: "flex" },fontWeight: location.pathname === '/' ? 'bold' : 'normal', }}
                   >
-                    Guideline
+                    Main Page
                   </Typography>
                 </Link>
                 <Typography
@@ -38,16 +40,18 @@ const Header = () => {
                     |
                   </Typography>
                 <Link
-                  href="/rice_trait_ontology_curation_system/rice-trait-ontology/"
+                  href="/rice_trait_ontology_curation_system/introductions/"
                   color="inherit"
                   underline="none"
                 >
                   <Typography
                     variant="h6"
                     component="div"
-                    sx={{ display: { xs: "none", md: "flex" }}}
+                    sx={{ 
+                      display: { xs: "none", md: "flex" },
+                      fontWeight: location.pathname === '/introductions/' ? 'bold' : 'normal',}}
                   >
-                    Curation System
+                    Guidelines
                   </Typography>
                 </Link>
               </Box>

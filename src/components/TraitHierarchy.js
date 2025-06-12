@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Tree from "rc-tree";
 import "rc-tree/assets/index.css";
-import { Box, Typography, Chip } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Chip,
+  Backdrop,
+  CircularProgress,
+} from "@mui/material";
 
 const TraitHierarchyRcTree = ({
   searchResult,
@@ -12,8 +18,8 @@ const TraitHierarchyRcTree = ({
   const [treeData, setTreeData] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Utility: Flatten tree to find matched nodes and expand paths
   const findMatchesAndExpanded = (nodes, term, parentKeys = []) => {
     let expanded = [];
     let matchedKeys = new Set();
@@ -23,11 +29,10 @@ const TraitHierarchyRcTree = ({
         const key = node.id.toString();
         const newPath = [...path, key];
         const isMatched =
-          term && node.ename.toLowerCase().includes(term.toLowerCase());
+          term && node.title.toLowerCase().includes(term.toLowerCase());
 
         if (isMatched) {
           matchedKeys.add(key);
-          // Expand all ancestors
           for (let i = 0; i < newPath.length - 1; i++) {
             expanded.push(newPath[i]);
           }
@@ -36,7 +41,7 @@ const TraitHierarchyRcTree = ({
         return {
           title: (
             <>
-              {node.ename}
+              {node.title}
               {isMatched && (
                 <Chip
                   label="Matched"
@@ -48,9 +53,7 @@ const TraitHierarchyRcTree = ({
             </>
           ),
           key,
-          children: node.children
-            ? recurse(node.children, newPath)
-            : undefined,
+          children: node.children ? recurse(node.children, newPath) : undefined,
         };
       });
 
@@ -74,26 +77,28 @@ const TraitHierarchyRcTree = ({
     setSelectedKeys(keys);
     const node = info.node;
     const traitId = node.key;
-
-    // Simulate `onTraitSelect`
     onTraitSelect && onTraitSelect({ id: traitId, ename: node.title });
-
-    // Fetch evaluation data
     try {
+      setLoading(true);
       const res = await fetch(
         "http://127.0.0.1:8000/rice_trait_ontology_curation_system/fetch_trait_evalutation/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ trait_id: traitId ,name:node.title.props.children[0]}),
+          body: JSON.stringify({
+            trait_id: traitId,
+            name: node.title.props.children[0],
+          }),
         }
       );
 
       if (res.ok) {
         const data = await res.json();
         onEvaluationValue && onEvaluationValue(data);
+        setLoading(false);
       } else {
         onEvaluationValue && onEvaluationValue([]);
+        setLoading(false);
       }
     } catch (err) {
       onEvaluationValue && onEvaluationValue([]);
@@ -102,19 +107,25 @@ const TraitHierarchyRcTree = ({
 
   return (
     <>
-    <Box>
-      <Typography variant="h6" gutterBottom>
-        Trait Hierarchy
-      </Typography>
-      <Tree
-        treeData={treeData}
-        expandedKeys={expandedKeys}
-        selectedKeys={selectedKeys}
-        onExpand={setExpandedKeys}
-        onSelect={onSelect}
-        defaultExpandParent={true}
-      />
-    </Box>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Box>
+        <Typography variant="h6" gutterBottom>
+          Trait Hierarchy
+        </Typography>
+        <Tree
+          treeData={treeData}
+          expandedKeys={expandedKeys}
+          selectedKeys={selectedKeys}
+          onExpand={setExpandedKeys}
+          onSelect={onSelect}
+          defaultExpandParent={true}
+        />
+      </Box>
     </>
   );
 };

@@ -24,7 +24,7 @@ const Header = () => {
             {/* Logo */}
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <img
-                src="http://lit-evi.hzau.edu.cn/static/RiceTraitOntology/img/RTOlogo.png"
+                src="http://127.0.0.1:8000/static/RiceTraitOntology/img/RTOlogo.png"
                 alt="Logo"
                 style={{ height: 60 }}
               />

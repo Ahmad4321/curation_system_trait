@@ -19,7 +19,7 @@ const Footer = () => {
         <Stack direction="column" alignItems="center" spacing={1}>
           <Box
             component="img"
-            src="http://lit-evi.hzau.edu.cn/static/BioNLP_Django/img/home/BioNLP_logo.png" // Replace with your logo path or import
+            src="http://lit-evi.hzau.edu.cn/static/BioNLP_Django/img/home/BioNLP_logo.png"  // Replace with your logo path or import
             alt="BioNLP Lab Logo"
             sx={{ width: 100, height: 100 }}
           />

@@ -9,9 +9,9 @@ function App() {
   <>
   <Router basename='rice_trait_ontology_curation_system/'>
       <Routes>
-        <Route path='/' element={<Introduction/>} />
-        <Route path='home/' element={<Introduction/>} />
-        <Route path='rice-trait-ontology/' element={<CurationSystem/>} />
+        <Route path='/' element={<CurationSystem/>} />
+        <Route path='home/' element={<CurationSystem/>} />
+        <Route path='introductions/' element={<Introduction/>} />
       </Routes>
     </Router>
   </>

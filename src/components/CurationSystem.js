@@ -132,13 +132,13 @@ const CurationSystem = () => {
         const res = await fetch(
           "http://127.0.0.1:8000/rice_trait_ontology_curation_system/curation_system_trait/",
           {
-            method: "POST",
+            method: "GET",
             headers: { "Content-Type": "application/json" },
           }
         );
         if (res.ok) {
           const data = await res.json();
-          setSearchinital(data);
+          data.length>0 ? setSearchinital(data) : setSearchinital(searchdata);
         }
       } catch (error) {
         
@@ -147,7 +147,6 @@ const CurationSystem = () => {
 
     fetchData();
   }, []);
-
 
 
   return (
@@ -190,7 +189,7 @@ const CurationSystem = () => {
             <Grid item size={6}>
               <Paper elevation={2} sx={{ p: 2, height: "500px", overflowY: "auto"}}>
                 <ActionPanel
-                  data={searchdata}
+                  data={searchinital}
                   isLogged={isLoggedIn}
                   userData={userData}
                   trait={selectedTrait}
@@ -199,9 +198,11 @@ const CurationSystem = () => {
                 />
               </Paper>
             </Grid>
-            <Grid item size={12}>
-              <EvidenceAccordion trait={evaluationValue} />
-            </Grid>
+            {selectedTrait && (
+                <Grid item size={12}>
+                <EvidenceAccordion trait={evaluationValue} />
+              </Grid>)
+}
           </Grid>
         </>
         {/* <Footer /> */}
