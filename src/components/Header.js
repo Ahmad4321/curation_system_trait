@@ -28,7 +28,9 @@ const Header = () => {
                   <Typography
                     variant="h6"
                     component="div"
-                    sx={{ display: { xs: "none", md: "flex" },fontWeight: location.pathname === '/' ? 'bold' : 'normal', }}
+                    sx={{ display: { xs: "none", md: "flex"},
+                    fontSize:"x-large",
+                    fontWeight: location.pathname === '/' ? 'bold' : 'normal', }}
                   >
                     Main Page
                   </Typography>
@@ -40,7 +42,7 @@ const Header = () => {
                     |
                   </Typography>
                 <Link
-                  href="/rice_trait_ontology_curation_system/introductions/"
+                  href="/rice_trait_ontology_curation_system/guidlines/"
                   color="inherit"
                   underline="none"
                 >
@@ -48,8 +50,11 @@ const Header = () => {
                     variant="h6"
                     component="div"
                     sx={{ 
-                      display: { xs: "none", md: "flex" },
-                      fontWeight: location.pathname === '/introductions/' ? 'bold' : 'normal',}}
+                      display: { xs: "none", md: "flex"},
+                      fontWeight: location.pathname === '/guidlines/' ? 'bold' : 'normal',
+                      fontSize:"x-large"
+                    }}
+                      
                   >
                     Guidelines
                   </Typography>

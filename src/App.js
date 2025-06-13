@@ -11,7 +11,7 @@ function App() {
       <Routes>
         <Route path='/' element={<CurationSystem/>} />
         <Route path='home/' element={<CurationSystem/>} />
-        <Route path='introductions/' element={<Introduction/>} />
+        <Route path='guidlines/' element={<Introduction/>} />
       </Routes>
     </Router>
   </>

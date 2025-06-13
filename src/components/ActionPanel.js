@@ -19,8 +19,12 @@ import {
   TableContainer,
   CircularProgress,
   Backdrop,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
 } from "@mui/material";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 const ActionPanel = ({
   isLogged,
@@ -40,6 +44,61 @@ const ActionPanel = ({
 
   const [username, setUsername] = useState("");
 
+  const [open, setOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [edit_comment, setEdit_comment] = useState("");
+  const [rowId, setRowId] = useState(null);
+  const [rows, setRows] = useState(evaluationValue ? evaluationValue : null);
+
+  const handleRowClick = (row) => {
+    setSelectedRow(row);
+    setEdit_comment(row.evaluation);
+    setRowId(row.id);
+    setOpen(true);
+  };
+
+  const handleEditSubmit = async () => {
+    setLoading(true);
+    try {
+      const body = JSON.stringify({
+        evo_id: rowId,
+        comment: edit_comment,
+        trait_id: trait.id,
+      });
+      const res = await fetch(
+        "http://127.0.0.1:8000/rice_trait_ontology_curation_system/edit-evaluation/",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: body,
+        }
+      );
+      if (res.ok) {
+        setRows((prevRows) =>
+          prevRows.map((row) => (row.id === selectedRow.id ? selectedRow : row))
+        );
+        setLoading(false);
+        setOpen(false);
+        setSelectedRow(null);
+      } else {
+        setLoading(false);
+        setOpen(false);
+        setSelectedRow(null);
+      }
+    } catch (error) {
+      setLoading(false);
+      setOpen(false);
+      setSelectedRow(null);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedRow(null);
+  };
+
   useEffect(() => {
     if (userData?.username) {
       setUsername(userData.username);
@@ -51,6 +110,7 @@ const ActionPanel = ({
   useEffect(() => {
     if (onEvaluationValue) {
       setEvaluationValue(onEvaluationValue.data);
+      setRows(onEvaluationValue.data);
       setTraitInformation(onEvaluationValue.Trait_information);
     } else {
       setEvaluationValue([]);
@@ -59,7 +119,6 @@ const ActionPanel = ({
   }, [onEvaluationValue]);
 
   const handleevoSubmit = async () => {
-
     setLoading(true);
     if (!newComment || !username) {
       setMsg("❌ Please fill in all fields.");
@@ -109,15 +168,14 @@ const ActionPanel = ({
 
   return (
     <>
-    <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={loading}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
       <Box>
-
         {trait && (
           <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
             <strong>Selected trait</strong> : {trait.ename}
@@ -131,43 +189,54 @@ const ActionPanel = ({
           <TableContainer
             component={Paper}
             sx={{
-              maxHeight: 200,overflowY: "auto", 
+              maxHeight: 200,
+              overflowY: "auto",
             }}
           >
             <Table stickyHeader size="small">
-              <TableHead>
-              </TableHead>
+              <TableHead></TableHead>
               <TableBody>
                 {traitInformation
                   ? traitInformation.map((row, index) => (
                       <>
                         {row.trait_ontology_id && (
-                          <TableRow key={index+"1"}>
-                            <TableCell> <strong>ID</strong></TableCell>
+                          <TableRow key={index + "1"}>
+                            <TableCell>
+                              {" "}
+                              <strong>ID</strong>
+                            </TableCell>
                             <TableCell>{row.trait_ontology_id}</TableCell>
                           </TableRow>
                         )}
                         {row.sentence && (
-                          <TableRow key={index+"2"}>
-                            <TableCell><strong>Definition</strong></TableCell>
+                          <TableRow key={index + "2"}>
+                            <TableCell>
+                              <strong>Definition</strong>
+                            </TableCell>
                             <TableCell>{row.sentence}</TableCell>
                           </TableRow>
                         )}
                         {row.is_a && (
-                          <TableRow key={index+"3"}>
-                            <TableCell><strong>is_a</strong></TableCell>
+                          <TableRow key={index + "3"}>
+                            <TableCell>
+                              <strong>is_a</strong>
+                            </TableCell>
                             <TableCell>{row.is_a}</TableCell>
                           </TableRow>
                         )}
                         {row.synonym && (
-                          <TableRow key={index+"4"}>
-                            <TableCell><strong>Synonym</strong></TableCell>
+                          <TableRow key={index + "4"}>
+                            <TableCell>
+                              <strong>Synonym</strong>
+                            </TableCell>
                             <TableCell>{row.synonym}</TableCell>
                           </TableRow>
                         )}
                         {row.comment && (
-                          <TableRow key={index+"5"}>
-                            <TableCell><strong>Comment</strong></TableCell>
+                          <TableRow key={index + "5"}>
+                            <TableCell>
+                              <strong>Comment</strong>
+                            </TableCell>
                             <TableCell>{row.comment}</TableCell>
                           </TableRow>
                         )}
@@ -186,8 +255,9 @@ const ActionPanel = ({
           <TableContainer
             component={Paper}
             sx={{
-              maxHeight: 200, 
-              overflowY: "auto",            }}
+              maxHeight: 200,
+              overflowY: "auto",
+            }}
           >
             <Table stickyHeader size="small">
               <TableHead>
@@ -198,12 +268,21 @@ const ActionPanel = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {evaluationValue
-                  ? evaluationValue.map((row, index) => (
-                      <TableRow key={index}>
+                {rows
+                  ? rows.map((row, index) => (
+                      <TableRow
+                        key={index}
+                        onClick={() => handleRowClick(row)}
+                        style={{ cursor: "pointer" }}
+                      >
                         <TableCell>{row.evaluation}</TableCell>
                         <TableCell>{row.expert_name}</TableCell>
-                        <TableCell>{format(new Date(row.created_at), "MMMM dd, yyyy hh:mm:ss a")}</TableCell>
+                        <TableCell>
+                          {format(
+                            new Date(row.created_at),
+                            "MMMM dd, yyyy hh:mm:ss a"
+                          )}
+                        </TableCell>
                       </TableRow>
                     ))
                   : ""}
@@ -270,7 +349,6 @@ const ActionPanel = ({
                 />
               </RadioGroup>
             </FormControl>
-
           </Box>
         )}
         <Typography variant="body2" color="error">
@@ -282,12 +360,74 @@ const ActionPanel = ({
             color="primary"
             onClick={handleevoSubmit}
             fullWidth
-            disabled={!newComment || !username || !trait } 
+            disabled={!newComment || !username || !trait}
           >
             Save Evaluation
           </Button>
         </Box>
       </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            width: "500px",
+            height: "350px",
+            maxWidth: "none",
+          },
+        }}
+      >
+        {selectedRow && (
+          <>
+            <Backdrop
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={loading}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
+            <DialogTitle>Edit By : {selectedRow.expert_name}</DialogTitle>
+            <DialogContent>
+              <Typography sx={{ padding: 3, color: "green" }}>
+                <strong>*Note:</strong> Please update your comment below.
+              </Typography>
+              <TextField
+                fullWidth
+                multiline
+                label="Expert Comment"
+                rows={3}
+                name="evaluation"
+                value={edit_comment}
+                onChange={(e) => {
+                  setEdit_comment(e.target.value);
+                  console.log(e.target);
+                  const { name, value } = e.target;
+                  console.log(name, value);
+                  setSelectedRow((prev) => ({
+                    ...prev,
+                    [name]: name === "evaluation" ? value : value,
+                  }));
+                  console.log(selectedRow);
+                  setMsg("");
+                }}
+                variant="outlined"
+                placeholder="Add your comment here..."
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleEditSubmit}
+              >
+                Save Evaluation
+              </Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
     </>
   );
 };
