@@ -14,7 +14,7 @@ import {
   Grid,
   Button,
   Backdrop,
-  CircularProgress,
+  CircularProgress,Radio,RadioGroup,FormControlLabel
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
@@ -119,6 +119,7 @@ const EvidenceAccordion = ({ trait }) => {
   const [llmResults, setllmResults] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [action, setAction] = useState("");
 
   useEffect(() => {
     if (trait) {
@@ -163,6 +164,7 @@ const EvidenceAccordion = ({ trait }) => {
         input_prompt: inputPrompt,
         trait_primary_id: trait.trait_val,
         trait_selected_name: trait.trait_name,
+        llm_tool:action
       });
 
       const res = await fetch(
@@ -312,6 +314,26 @@ const EvidenceAccordion = ({ trait }) => {
                     *Note: Curation System is not saving the LLM API sensitive
                     key.
                   </Typography>
+                  <Box sx={{ mb: 3 }}>
+                                <Typography
+                    variant="caption"
+                    sx={{ mt: 0.5, ml: 1 }}
+                  >
+                    LLM Tools
+                  </Typography>
+                                <RadioGroup
+                                  row
+                                  value={action}
+                                  onChange={(e) => setAction(e.target.value)}
+                                >
+                                  <FormControlLabel value="KIMI" control={<Radio />} label="KIMI" />
+                                  <FormControlLabel
+                                    value="DEEPSEEK"
+                                    control={<Radio />}
+                                    label="DeepSeek"
+                                  />
+                                </RadioGroup>
+                            </Box>
                   <TextField
                     id="formDataTextArea"
                     label="LLM Prompt"
