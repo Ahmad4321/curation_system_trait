@@ -46,6 +46,11 @@ const AccordionSection = () => {
       titleZh: "概念增加",
       content: `Adding a new Trait to the trait ontology is a brainstorming process that involves gathering substantial evidence from diverse resources. Here is an example to show how.
   The trait name is “Seedling-stage submergence tolerance” in rice, which does not currently exist in RTO and represents the early-stage stress of water during seed germination. Evidence is derived from Rice-Alterome, PubAnnotation, and NCBI, reflecting over 100 results from these sources. These references portray it as a trait and link it to submergence tolerance, which is already included in the Rice Trait Ontology. Therefore, one may add a new trait under submergence tolerance, designating the trait “Seedling-stage submergence tolerance” as a child of the parent trait called submergence tolerance.`,
+      howtoAdd: `If there is any unkwown trait, you can add it to the trait ontology.Input the trait name into search bar and
+      click search button.If not found select a trait in which hierachy the trait belongs. Then login and add you comment, name|Contact information , select 'add' and submit. 
+      After discussing the team expert, we will contact you back`,
+      howtoAddcn: `如果有任何未知的特徵，您可以將其新增至特徵本體。在搜尋欄中輸入特徵名稱，然後點選「搜尋」按鈕。如果未找到，請選擇該特徵所屬的層級。然後登入並新增您的評論、姓名|聯絡方式，選擇「新增」並提交。
+與團隊專家討論後，我們將與您聯繫。`,
       ch: `向性状本体论中添加新性状是一个集思广益的过程，需要从多种来源收集大量证据。以下是一个示例说明其运作方式。
   有一个名为“Seedling-stage submergence tolerance/幼苗期淹水耐受性”的性状，目前在水稻性状本体论 (RTO) 中尚不存在。它代表了水稻种子萌发早期阶段的水压胁迫。证据来源于 Rice-Alterome、PubAnnotation 和 NCBI，这些来源总共提供了超过 100 条相关结果。这些参考文献将其描述为一个性状，并将其与“Seedling-stage submergence tolerance/淹水耐受性”联系起来，而“淹水耐受性”已包含在水稻性状本体论中。因此，可以将一个新性状添加到“淹水耐受性”之下，将“幼苗期淹水耐受性”指定为父性状“淹水耐受性”的子性状。`,
     },
@@ -53,6 +58,8 @@ const AccordionSection = () => {
       titleEn:
         "Use Case 2: Found a similar meaning Trait, merge into the existing Trait",
       titleZh: "概念合并",
+      howtoAdd :``,
+      howtoAddcn: ``,
       content: `Consider a trait example of submergence sensitivity, which relates to the water tolerance trait. One of the traits named “submergence tolerance,” which most closely resembles “flooding tolerance,” acts as a synonym for submergence tolerance. 
   Evidence can be found in both Rice-Alterome and PubAnnotation, reflecting results related to flood tolerance in the rice crop. From the Rice-Alterome dataset, it shows 39 sentences and PMID, as well as the same number of genes associated with the traits submergence tolerance and flooding tolerance. Based on these evidence, one may be able to consider that it is the synonym of submergence tolerance and we can merge flooding tolerance into submergence tolerance.`,
       ch: `考虑一个与耐水性状相关的“淹水敏感性”性状示例。其中，“Submergence tolerance/淹水耐受性”这个性状与“Flooding tolerance/洪涝耐受性”非常相似，可以作为“淹水耐受性”的同义词。
@@ -62,6 +69,8 @@ const AccordionSection = () => {
       titleEn:
         "Use Case 3: Trait with insufficient evidence or duplicate trait",
       titleZh: "概念去除",
+      howtoAdd :``,
+      howtoAddcn: ``,
       content: `Removing a trait from the ontology system is a daunting task. A trait may be removed for the following reasons: i) Insufficient evidence found in the literature, resulting in experts wanting to retain it for future research, while sometimes preferring to remove it; ii) A trait that is considered a duplicate when multiple traits exist in the ontology may warrant removal.    
   Despite these considerations, unfortunately, the current rice trait ontology system does not contain any false traits that can be removed, whether they are duplicates or have inadequate literature evidence. But we appreciate rigorous checking from experts.`,
       ch: `从本体论系统中移除一个性状是一项艰巨的任务。移除某个性状的原因可能包括：
@@ -71,6 +80,8 @@ i) 文献中证据不足：这可能导致专家希望保留该性状以供未�
     {
       titleEn: "Use Case 4: Same Trait and Same Definition, remain as is",
       titleZh: "概念保留",
+      howtoAdd :``,
+      howtoAddcn: ``,
       content: `Even if you find a trait to be impeccable in terms of its importance and logical placement, please still mark it as "Remain."`,
       ch: `如果您检查某个性状不论从重要性、位置合理性而言都无可挑剔，请仍然给予“Remain/保留”标记`,
     },
@@ -93,7 +104,11 @@ i) 文献中证据不足：这可能导致专家希望保留该性状以供未�
               <Typography>
                 {item.content}
                 <br />
+                {item.howtoAdd}
+                <br />
                 {item.ch}
+                <br />
+                {item.howtoAddcn}
               </Typography>
             </AccordionDetails>
           </Accordion>

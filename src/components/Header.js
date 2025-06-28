@@ -42,7 +42,7 @@ const Header = () => {
                     |
                   </Typography>
                 <Link
-                  href="/rice_trait_ontology_curation_system/guidlines/"
+                  href="/rice_trait_ontology_curation_system/guidelines/"
                   color="inherit"
                   underline="none"
                 >
@@ -51,7 +51,7 @@ const Header = () => {
                     component="div"
                     sx={{ 
                       display: { xs: "none", md: "flex"},
-                      fontWeight: location.pathname === '/guidlines/' ? 'bold' : 'normal',
+                      fontWeight: location.pathname === '/guidelines/' ? 'bold' : 'normal',
                       fontSize:"x-large"
                     }}
                       

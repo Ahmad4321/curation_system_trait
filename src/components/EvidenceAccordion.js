@@ -84,12 +84,22 @@ const columnsLLM = [
   {
     field: "trait_name",
     headerName: "Name",
+    width: 150,
+  },
+  {
+    field: "llm_model",
+    headerName: "Model Name",
+    width: 150,
+  },
+  {
+    field: "llm_name",
+    headerName: "LLM Tool",
     width: 90,
   },
   {
     field: "created_date",
     headerName: "Date",
-    width: 300,
+    width: 250,
     renderCell : (params) => {
       const date = new Date(params.value);
       return date.toLocaleString('en-US', {
@@ -103,7 +113,7 @@ const columnsLLM = [
       });
     },
   },
-  { field: "LLM_response", headerName: "LLM Response", width: 800 },
+  { field: "LLM_response", headerName: "LLM Response", width: 500 },
 ];
 
 const paginationModel = { page: 0, pageSize: 10 };
@@ -114,7 +124,7 @@ const EvidenceAccordion = ({ trait }) => {
   const [selectedRowRice, setSelectedRowRice] = useState(null);
   const [selectedRowPub, setSelectedRowPub] = useState(null);
   const [selectedRowLLM, setSelectedRowLLM] = useState(null);
-  const [llmAPIKey, setllmAPIKey] = useState("");
+  const [llmAPIKey, setllmAPIKey] = useState(null);
   const [inputPrompt, setInputPrompt] = useState("");
   const [llmResults, setllmResults] = useState("");
   const [loading, setLoading] = useState(false);
@@ -124,6 +134,8 @@ const EvidenceAccordion = ({ trait }) => {
   useEffect(() => {
     if (trait) {
       setInputPrompt(trait.llmPrompt);
+      setllmAPIKey(null);
+      setAction("");
     } else {
       setInputPrompt("");
     }
@@ -179,18 +191,22 @@ const EvidenceAccordion = ({ trait }) => {
         const data = await res.json()
         if (data.code !== 200) { 
           setErrorMsg(data.error)
+          setllmAPIKey("");
+          setAction("");
           setLoading(false);
         } else {
           setllmResults(data.result)
+          setllmAPIKey("");
+          setAction("");
           setErrorMsg("")
           setLoading(false);
-
         }
         
       }
     } catch (error) {
       setErrorMsg("Contact Administrator!")
       setLoading(false);
+      setllmAPIKey("")
 
     }
      setLoading(false);
@@ -301,6 +317,7 @@ const EvidenceAccordion = ({ trait }) => {
                   <TextField
                     label="LLM Authentication Key"
                     type="password"
+                    value={llmAPIKey}
                     onChange={(e) => setllmAPIKey(e.target.value)}
                     id="apikey"
                     name="apikey"
@@ -359,7 +376,7 @@ const EvidenceAccordion = ({ trait }) => {
                     onClick={LLMQuerySubmit}
                     sx={{ mt: 2 }}
                     id="showDataButton"
-                    disabled={!inputPrompt || !llmAPIKey } 
+                    disabled={!inputPrompt || !llmAPIKey || !action } 
                   >
                     Query LLM
                   </Button>
